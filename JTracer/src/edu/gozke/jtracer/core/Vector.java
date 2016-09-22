@@ -1,4 +1,4 @@
-package edu.gozke.Jtracer;
+package edu.gozke.jtracer.core;
 
 /**
  * This is a standard 3D vector class. This is an immutable object we're talking about here. 

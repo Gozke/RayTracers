@@ -1,4 +1,4 @@
-package edu.gozke.Jtracer;
+package edu.gozke.jtracer.core;
 
 /**
  * This class represents the ray that should be traced.

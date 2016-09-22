@@ -1,4 +1,4 @@
-package edu.gozke.Jtracer;
+package edu.gozke.jtracer.core;
 
 import java.util.ArrayList;
 import java.util.Collection;

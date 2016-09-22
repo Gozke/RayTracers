@@ -1,9 +1,11 @@
-package edu.gozke.Jtracer;
+package edu.gozke.jtracer;
 
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JWindow;
+
+import edu.gozke.jtracer.core.Scene;
 
 public class TracerMain extends JWindow{
 	Scene sceneToRender;

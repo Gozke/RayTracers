@@ -1,4 +1,4 @@
-package edu.gozke.Jtracer;
+package edu.gozke.jtracer.core;
 
 /**
  * Standard class representing a RGB color
