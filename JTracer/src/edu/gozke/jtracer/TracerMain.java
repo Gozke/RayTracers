@@ -1,23 +1,11 @@
 package edu.gozke.jtracer;
 
-import java.awt.Dimension;
-
-import javax.swing.JPanel;
-import javax.swing.JWindow;
-
+import edu.gozke.jtracer.core.Color;
 import edu.gozke.jtracer.core.Scene;
 
-public class TracerMain extends JWindow{
+public class TracerMain implements SceneRenderer{
 	Scene sceneToRender;
-	
-	/**
-	 * Sets up the window. Creates controls and other stuff.
-	 */
-	public void initWindow() {
-		JPanel contentPane = new JPanel();
-		
-		
-	}
+
 	
 	/**
 	 * Creates and initializes the scene and it' related objects. Eg Lights, Camera, Renderable objects.
@@ -25,21 +13,24 @@ public class TracerMain extends JWindow{
 	public void initScene(){
 		
 	}
-	
-	/**
-	 * Renders the scene in the given resolution. While rendering a progressbar is displayed.
-	 * 
-	 * @param resolution the resolution of the rendered image.
-	 */
-	public void renderAndShowScene(Dimension resolution){
-		
+
+	@Override
+	public Color[] renderedScene(int width, int height, RenderOptions options) {
+		try {
+			System.out.println("sleeping for 5 secs");
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-	
 	
 	public static void main(String[] args)
 	{
-		TracerMain tracerWindow = new TracerMain();
-		tracerWindow.initScene();
-		tracerWindow.initWindow();
+		TracerMain tracerCoorinator = new TracerMain();
+		tracerCoorinator.initScene();
+		TracerFrame mainWindow = new TracerFrame(tracerCoorinator);
+		mainWindow.setVisible(true);
 	}
+
 }
