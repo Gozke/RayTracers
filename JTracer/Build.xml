@@ -1,0 +1,35 @@
+<project>
+	<property environment="env"/>
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="jar.file" value="${build.dir}/JTracer.jar"/>
+	
+	<property name="class.dir" value="${build.dir}/classes"/>
+	
+	<path id="projectPath">
+		<fileset dir="${class.dir}" includes="*.*"/>
+	</path>
+	
+	<target name="Clean" description="Cleans up all the mess">
+		<delete dir="${build.dir}"></delete>
+	</target>
+	
+	<target name="Compile" description="This should compile the java files to classes">
+		<mkdir dir="${class.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${class.dir}" includeantruntime="false"/>
+	</target>
+	
+	<target name="Build Jar" depends="Compile" description="This should compile and create the jar">
+		<jar destfile="${jar.file}" basedir="${class.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="edu.gozke.jtracer.TracerMain"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<!-- Runner targets -->
+	<target name="Run" depends="Compile" description="This will compile, and run my stuff.">
+		<java classname="edu.gozke.jtracer.TracerMain" fork="yes" classpath="${class.dir}"/>
+	</target>
+	
+</project>
