@@ -7,13 +7,21 @@ package edu.gozke.jtracer.core;
  *
  */
 public class Vector {
-	public final float x,y,z;
+	public final float x,y,z, w;
 
 	public Vector(float x, float y, float z) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.w = 1;
+	}
+	
+	public Vector(float[] coordinates){
+		x = coordinates[0];
+		y = coordinates[1];
+		z = coordinates[2];
+		w = coordinates[3];
 	}
 	
 	/**
@@ -118,4 +126,14 @@ public class Vector {
 	public Vector clone(){
 		return new Vector(x,y,z);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("(");
+		builder.append(x).append(", ").append(y).append(", ")
+		.append(z).append(", ").append(w).append(')');
+		return builder.toString();
+	}
+	
+	
 }
