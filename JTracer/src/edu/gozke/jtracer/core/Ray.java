@@ -31,6 +31,6 @@ public class Ray {
 	 * @return the given point on the ray
 	 */
 	public Vector getPointOfRay(float t){
-		return origin.add(direction.scaleBy(t));
+		return origin.plus(direction.scaleBy(t));
 	}
 }

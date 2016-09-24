@@ -1,22 +1,22 @@
 package edu.gozke.jtracer.core;
 
 public class TransformationMatrix {
-	private Matrix tMatrix;
+	private QuadMatrix tMatrix;
 	
 	/**
 	 * Creates the identity transformation matrix.
 	 * 
 	 */
 	public TransformationMatrix(){
-		tMatrix = Matrix.UNIT_MATRIX;
+		tMatrix = QuadMatrix.UNIT_MATRIX;
 	}
 
 	public TransformationMatrix applyRotationAroundX(float angleInRad){
-		Matrix rotationMatrix = new Matrix(new float[]{
+		QuadMatrix rotationMatrix = new QuadMatrix(new float[][]{
 			
 		});
 		
-		tMatrix.multiplyFromRigh(rotationMatrix);
+		tMatrix.multiplyByLeftMatrix(rotationMatrix);
 		return this;
 	}
 	
@@ -30,7 +30,7 @@ public class TransformationMatrix {
 	
 
 	public Vector transformVector(Vector v){
-		return tMatrix.multiplyWithVector(v);
+		return tMatrix.multiplyVectorFromRight(v);
 	}
 	
 }

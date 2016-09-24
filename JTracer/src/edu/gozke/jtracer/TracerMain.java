@@ -32,5 +32,5 @@ public class TracerMain implements SceneRenderer{
 		TracerFrame mainWindow = new TracerFrame(tracerCoorinator);
 		mainWindow.setVisible(true);
 	}
-
+	
 }

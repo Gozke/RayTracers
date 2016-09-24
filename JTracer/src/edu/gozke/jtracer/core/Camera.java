@@ -32,8 +32,8 @@ public class Camera {
 	public Ray getRay(int x, int y) {
 		return new Ray(
 				eye,
-				lookAt.add(right.scaleBy(2*(x + 0.5f) / xMax-1))
-					  .add(up.scaleBy(2*(y + 0.5f) / yMax-1))
+				lookAt.plus(right.scaleBy(2*(x + 0.5f) / xMax-1))
+					  .plus(up.scaleBy(2*(y + 0.5f) / yMax-1))
 				);
 	} 
 	

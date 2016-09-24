@@ -1,5 +1,7 @@
 package edu.gozke.jtracer.core;
 
+import java.util.Arrays;
+
 /**
  * This is a standard 3D vector class. This is an immutable object we're talking about here. 
  * 
@@ -88,7 +90,7 @@ public class Vector {
 	 * @param otherVector
 	 * @return this vector + other vector
 	 */
-	public Vector add(Vector otherVector){
+	public Vector plus(Vector otherVector){
 		return add(this,otherVector);
 	}
 	
@@ -134,6 +136,24 @@ public class Vector {
 		.append(z).append(", ").append(w).append(')');
 		return builder.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Vector)){
+			return false;
+		}
+		Vector other = (Vector) obj;
+		return x == other.x && y == other.y && z == other.z && w == other.w;
+	}
 	
+	/**
+	 * Multiples this vector by the parameter matrix. The result will be saved in this vector.
+	 * <br>this = this * [parameter Matrix]
+	 * 
+	 * @return thisVector * [parameter matrix]
+	 */
+	public Vector multiplyByMatrix(QuadMatrix matrix){
+		return matrix.multiplyVectorFromRight(this);
+	}
 	
 }
