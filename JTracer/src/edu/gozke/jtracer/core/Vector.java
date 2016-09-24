@@ -10,6 +10,8 @@ import java.util.Arrays;
  */
 public class Vector {
 	public final float x,y,z, w;
+	
+	private static final float DELTA = 0.00003f;
 
 	public Vector(float x, float y, float z) {
 		super();
@@ -143,9 +145,12 @@ public class Vector {
 			return false;
 		}
 		Vector other = (Vector) obj;
-		return x == other.x && y == other.y && z == other.z && w == other.w;
+		return equalsDelta(x, other.x) && equalsDelta(y, other.y) && equalsDelta(z,other.z) && equalsDelta(w, other.w);
 	}
 	
+	private boolean equalsDelta(float a, float b){
+		return Math.abs(a - b) < DELTA;
+	}
 	/**
 	 * Multiples this vector by the parameter matrix. The result will be saved in this vector.
 	 * <br>this = this * [parameter Matrix]

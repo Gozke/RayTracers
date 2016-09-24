@@ -2,12 +2,17 @@ package edu.gozke.jtracer.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
+import edu.gozke.jtracer.objects.RenderableObject;
 
 public class Scene {
 	private List<RenderableObject> objectsInScene;
 	private List<LightSource> lightsInScene;
 	private Camera camera;
 	
+	private int width;
+	private int height;
 	private Byte[] rasterBuffer; 
 			
 	/**
@@ -24,10 +29,17 @@ public class Scene {
 	}
 	
 	public Byte[] render(){
+		Color[][] buffer = new Color[height][width];
+		for(int r = 0; r<height; r++){
+			for(int c = 0; c<width; c++){
+				buffer[r][c] = trace(camera.getRay(r, c));
+			}
+		}
 		return rasterBuffer;
 	}
 	
-	private Color trace(){
+	public Color trace(Ray ray){
 		return null;
 	}
+	
 }

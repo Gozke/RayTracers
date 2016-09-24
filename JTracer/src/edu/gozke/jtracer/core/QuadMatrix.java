@@ -111,16 +111,24 @@ public class QuadMatrix {
 	 * 
 	 * @return this matrix inverted
 	 */
-	public QuadMatrix inverse(){
+	public QuadMatrix invert(){
 		Matrix m = new Matrix(toDoubleArray(elements));
 		elements = toFloatArray(m.inverse().getArray());
 		return this;
 	}
 	
+	/**
+	 * Returns the inverse of this matrix as a new object.
+	 * 
+	 * @return inverse of this matrix as new object.
+	 */
 	public QuadMatrix getInverseClone(){
-		return clone().inverse();
+		return clone().invert();
 	}
 	
+	/**
+	 * Returns a new matrix with the elements of this matrix.
+	 */
 	public QuadMatrix clone(){
 		return new QuadMatrix(elements);
 	}
@@ -163,15 +171,7 @@ public class QuadMatrix {
 		elements[r][c] = elements[c][r];
 		elements[c][r] = tmp;
 	}
-	
-	private float[] toFloatArray(double[] f){
-		float[] res = new float[f.length];
-		for(int i = 0;i <f.length; i++){
-			res[i] = (float) f[i];
-		}
-		return res;
-	}
-	
+
 	private double[][] toDoubleArray(float[][] fArray){
 		double[][] a = new double[4][4];
 		for(int r = 0; r<4; r++){

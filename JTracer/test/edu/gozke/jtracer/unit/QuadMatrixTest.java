@@ -76,7 +76,7 @@ public class QuadMatrixTest extends TestCase {
 			});
 			
 			// testMatrix = testMatrix^(-1)
-			testMatrix.inverse();
+			testMatrix.invert();
 			assertEquals(expectedResult, testMatrix);
 		}
 }
