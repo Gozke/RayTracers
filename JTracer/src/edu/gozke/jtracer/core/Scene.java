@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import edu.gozke.jtracer.RenderOptions;
+import edu.gozke.jtracer.RenderableScene;
 import edu.gozke.jtracer.objects.RenderableObject;
 
-public class Scene {
+public class Scene implements Function<Ray, Color>, RenderableScene{
 	private List<RenderableObject> objectsInScene;
 	private List<LightSource> lightsInScene;
 	private Camera camera;
 	
 	private int width;
 	private int height;
-	private Byte[] rasterBuffer; 
-			
+	
+	private Color Lambient = new Color(152,244,250);
+	
 	/**
 	 * This constructor will construct a scene with the given resolution. (800x600 could be a safe start)
 	 * 
@@ -25,26 +28,17 @@ public class Scene {
 		objectsInScene = new ArrayList<>();
 		lightsInScene = new ArrayList<>();
 		camera = null;
-		rasterBuffer = new Byte[width*height];
 	}
 	
-	public Byte[] render(){
-		Color[][] buffer = new Color[height][width];
-		for(int r = 0; r<height; r++){
-			for(int c = 0; c<width; c++){
-				buffer[r][c] = trace(camera.getRay(r, c));
-			}
-		}
-		return rasterBuffer;
-	}
 	
 	public Color trace(Ray ray){
 		Intersection hit = findNearestInteresction(ray);
 		if(hit != Intersection.NO_INTERSECTION){
 			// do stuff with intersection point..
 		}
+		
 		// return ambient color..
-		return null;
+		return Lambient;
 	}
 	
 	
@@ -67,4 +61,25 @@ public class Scene {
 		
 		return Intersection.NO_INTERSECTION;		
 	}
+
+	@Override
+	public Color apply(Ray t) {
+		return trace(t);
+	}
+
+	@Override
+	public byte[] renderedScene(int width, int height, RenderOptions options) {
+		byte[] buffer = new byte[width*height*3];
+		for(int r = 0; r<height; r++){
+			for(int c = 0; c<width; c++){
+				int pixelBaseIndex = r*width + c;
+				Color color = trace(camera.getRay(r, c));
+				buffer[pixelBaseIndex] = (byte) (color.blue*255);
+				buffer[pixelBaseIndex+1] = (byte) (color.green*255);
+				buffer[pixelBaseIndex+2] = (byte) (color.red*255);
+			}
+		}
+		return buffer;
+	}
+	
 }

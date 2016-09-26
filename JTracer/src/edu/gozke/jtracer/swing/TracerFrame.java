@@ -1,4 +1,4 @@
-package edu.gozke.jtracer;
+package edu.gozke.jtracer.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,6 +9,8 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
@@ -23,6 +25,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 
+import edu.gozke.jtracer.RenderOptions;
+import edu.gozke.jtracer.RenderableScene;
 import edu.gozke.jtracer.core.Color;
 
 
@@ -32,19 +36,19 @@ public class TracerFrame extends JFrame {
 	private JButton btnRenderScene;
 	JCheckBox chckbxParalellProcessing;
 	transient JPanel ImagePanel;
-	transient private SceneRenderer rendererBackend;
+	transient private RenderableScene rendererBackend;
 
 	private enum ImagePaneState {
 		WELCOME, RENDERING, RENDER_COMPLETE, ERROR
 	}
 
-	public TracerFrame(SceneRenderer rendererBackend) throws HeadlessException {
+	public TracerFrame(RenderableScene rendererBackend) throws HeadlessException {
 		super();
 		this.rendererBackend = rendererBackend;
 		initGUI();
 	}
 
-	private void setImagePanelContent(ImagePaneState state, Color[] imgData) {
+	private void setImagePanelContent(ImagePaneState state, byte[] imgData) {
 		ImagePanel.removeAll();
 		if (state == ImagePaneState.WELCOME) {
 			JLabel lbl = new JLabel("Set the parameters and press Render scene!");
@@ -56,8 +60,9 @@ public class TracerFrame extends JFrame {
 			progressBar.setIndeterminate(true);
 			ImagePanel.add(progressBar);
 		} else if(state == ImagePaneState.RENDER_COMPLETE){
-			JLabel lbl = new JLabel("Image done!");
-			ImagePanel.add(lbl);
+			ImgDisplayer img = new ImgDisplayer(createBufferedImage(imgData));
+			img.setPreferredSize(new Dimension(800,600));
+			ImagePanel.add(img);
 		} else if(state == ImagePaneState.ERROR){
 			JLabel lbl = new JLabel("Exception occured while rendering. See stderr!");
 			ImagePanel.add(lbl);
@@ -65,6 +70,7 @@ public class TracerFrame extends JFrame {
 		
 		repaint();
 		revalidate();
+		pack();
 	}
 
 	private void setEnableControls(boolean enabled){
@@ -81,7 +87,7 @@ public class TracerFrame extends JFrame {
 
 		ImagePanel = new JPanel();
 		ImagePanel.setMinimumSize(new Dimension(10, 500));
-		ImagePanel.setPreferredSize(new Dimension(800, 600));
+		//ImagePanel.setPreferredSize(new Dimension(1024, 600));
 		ImagePanel.setBorder(new LineBorder(new java.awt.Color(0, 0, 0), 3));
 		getContentPane().add(ImagePanel, BorderLayout.CENTER);
 		ImagePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -194,14 +200,21 @@ public class TracerFrame extends JFrame {
 		setImagePanelContent(ImagePaneState.RENDERING, null);
 		
 		new RenderingWorker(width, height, createOptionsFromGUI()).execute();
-		
+	}
+	
+	private BufferedImage createBufferedImage(byte[] imgData){
+		BufferedImage bImage = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR);
+		WritableRaster rast = bImage.getRaster();
+		rast.setDataElements(0, 0, 800, 600, imgData);
+
+		return bImage;
 	}
 	
 	private RenderOptions createOptionsFromGUI(){
 		return new RenderOptions().setIsParalellRenderingEnabled(chckbxParalellProcessing.isSelected());
 	}
 
-	private class RenderingWorker extends SwingWorker<Color[], Object>{
+	private class RenderingWorker extends SwingWorker<byte[], Object>{
 		private int resX, resY;
 		private RenderOptions opts;
 		
@@ -215,8 +228,9 @@ public class TracerFrame extends JFrame {
 
 
 		@Override
-		protected Color[] doInBackground() throws Exception {
-			System.out.println("I'm doing stuff..");
+		protected byte[] doInBackground() throws Exception {
+			System.out.println("I'm doing stuff..");			
+			
 			return rendererBackend.renderedScene(resX, resY, opts);
 		}
 
