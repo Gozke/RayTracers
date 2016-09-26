@@ -97,6 +97,16 @@ public class Vector {
 	}
 	
 	/**
+	 * this - B
+	 * 
+	 * @param B
+	 * @return this - B
+	 */
+	public Vector minus(Vector B){
+		return subtract(this, B);
+	}
+	
+	/**
 	 * Returns the a - b new vector.
 	 * For performance reasons this does not delegate calls to {@link #add(Vector, Vector)}.
 	 * 

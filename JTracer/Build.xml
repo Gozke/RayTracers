@@ -1,6 +1,7 @@
 <project>
 	<property environment="env"/>
 	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
 	<property name="build.dir" value="build"/>
 	<property name="jar.file" value="${build.dir}/JTracer.jar"/>
 	
@@ -8,6 +9,7 @@
 	
 	<path id="projectPath">
 		<fileset dir="${class.dir}" includes="*.*"/>
+		<fileset dir="${lib.dir}" includes="*.jar"/>
 	</path>
 	
 	<target name="Clean" description="Cleans up all the mess">
@@ -16,10 +18,10 @@
 	
 	<target name="Compile" description="This should compile the java files to classes">
 		<mkdir dir="${class.dir}"/>
-		<javac srcdir="${src.dir}" destdir="${class.dir}" includeantruntime="false"/>
+		<javac srcdir="${src.dir}" destdir="${class.dir}" includeantruntime="false" classpathref="projectPath"/>
 	</target>
 	
-	<target name="Build Jar" depends="Compile" description="This should compile and create the jar">
+	<target name="Jar" depends="Compile" description="This should compile and create the jar">
 		<jar destfile="${jar.file}" basedir="${class.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="edu.gozke.jtracer.TracerMain"/>

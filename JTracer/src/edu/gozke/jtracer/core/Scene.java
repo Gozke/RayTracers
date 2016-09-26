@@ -39,7 +39,32 @@ public class Scene {
 	}
 	
 	public Color trace(Ray ray){
+		Intersection hit = findNearestInteresction(ray);
+		if(hit != Intersection.NO_INTERSECTION){
+			// do stuff with intersection point..
+		}
+		// return ambient color..
 		return null;
 	}
 	
+	
+	/**
+	 * Checks every object find the nearest intersection with the ray.
+	 * 
+	 * @return Intersection details in world's base.
+	 *  {@link Intersection#NO_INTERSECTION} if no intersecting object was found.
+	 */
+	private Intersection findNearestInteresction(Ray ray){
+		RenderableObject nearestObject = null;
+		Intersection nearestIntersection = Intersection.NO_INTERSECTION;
+		for(RenderableObject obj : objectsInScene){
+			Intersection hit = obj.intersectWith(ray);
+			if(hit != Intersection.NO_INTERSECTION && hit.tParameter < nearestIntersection.tParameter){
+				nearestIntersection = hit;
+				nearestObject = obj;
+			}
+		}
+		
+		return Intersection.NO_INTERSECTION;		
+	}
 }

@@ -2,8 +2,6 @@ package edu.gozke.jtracer.core;
 
 import java.util.Arrays;
 
-import org.hamcrest.core.IsInstanceOf;
-
 import Jama.Matrix;
 
 /**

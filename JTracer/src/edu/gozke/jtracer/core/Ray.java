@@ -20,7 +20,7 @@ public class Ray {
 	public Ray(Vector origin, Vector direction) {
 		super();
 		this.origin = origin.clone();
-		this.direction = direction.clone().normalize();
+		this.direction = direction.clone();
 	}
 	 
 	/**

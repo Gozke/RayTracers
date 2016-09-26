@@ -48,7 +48,7 @@ public class TransformationMatrix {
 	 * @param treatVectorAsPoint if {@code false} the input is treated as a vector (transposed matrix is used)
 	 * @return
 	 */
-	public Vector performTransformation(Vector vector, TransformationTarget target){
+	public Vector transform(Vector vector, TransformationTarget target){
 		Vector transformed = null;
 		switch (target) {
 		case POINT_FROM_OBJECT_TO_WORLD_BASE:

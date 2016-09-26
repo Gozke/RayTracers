@@ -75,26 +75,40 @@ public class TransformationMatrixTest extends TestCase {
 				.applyTranslation(3, 2, 0)
 				.applyRotation(Axis.Z, (float)Math.PI)
 				.applyScaling(2, 2, 1);
-				;
+				
 		Vector origin = new Vector(0, 0, 0);
 		Vector testPoint = new Vector(4, 2, 0);
 		Vector up = new Vector(0,1,0);
 		Vector right = new Vector(1,0,0);
 		
-		Vector worldOriginInObjectBase = tranlation.performTransformation(origin, TransformationTarget.POINT_FROM_WORLD_TO_OBJECT_BASE);
+		Vector worldOriginInObjectBase = tranlation.transform(origin, TransformationTarget.POINT_FROM_WORLD_TO_OBJECT_BASE);
 		assertEquals(new Vector(1.5f,1f,0), worldOriginInObjectBase);
 		
-		Vector objectOriginInWorldBase = tranlation.performTransformation(origin, TransformationTarget.POINT_FROM_OBJECT_TO_WORLD_BASE);
+		Vector objectOriginInWorldBase = tranlation.transform(origin, TransformationTarget.POINT_FROM_OBJECT_TO_WORLD_BASE);
 		assertEquals(new Vector(3, 2, 0), objectOriginInWorldBase);
 		
-		Vector objectTestPointInWorldBase = tranlation.performTransformation(testPoint, TransformationTarget.POINT_FROM_OBJECT_TO_WORLD_BASE);
+		Vector objectTestPointInWorldBase = tranlation.transform(testPoint, TransformationTarget.POINT_FROM_OBJECT_TO_WORLD_BASE);
 		assertEquals(new Vector(-5,-2, 0), objectTestPointInWorldBase);
 		
-		Vector worldVectorRightInObjectBase = tranlation.performTransformation(right, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE);
+		Vector worldVectorRightInObjectBase = tranlation.transform(right, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE);
 		assertEquals(new Vector(-0.5f, 0, 0), worldVectorRightInObjectBase);
 		
-		Vector worldVectorUpInObjectBase = tranlation.performTransformation(up, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE);
+		Vector worldVectorUpInObjectBase = tranlation.transform(up, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE);
 		assertEquals(new Vector(0, -0.5f, 0), worldVectorUpInObjectBase);
 		
+	}
+	
+	public void testScaling(){
+		//TransformationMatrix trafo = new TransformationMatrix().applyScaling(2, 2, 2);
+		TransformationMatrix trafo = new TransformationMatrix().applyTranslation(1, 1, 1);
+		//TransformationMatrix trafo = new TransformationMatrix().applyRotation(Axis.Z, (float)Math.PI/2);
+		Vector up = new Vector(0, 1, 0);
+		System.out.println(up + "=> ");
+		
+		QuadMatrix transM = trafo.getTransformationMatrix();
+		System.out.println(transM.multiplyVectorFromRight(up));
+		System.out.println(transM.getInverseClone().multiplyVectorFromRight(up));
+		System.out.println(transM.getTransposedClone().multiplyVectorFromRight(up));
+		System.out.println(transM.getInverseClone().transpose().multiplyVectorFromRight(up));
 	}
 }
