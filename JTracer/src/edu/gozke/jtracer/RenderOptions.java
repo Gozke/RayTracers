@@ -1,7 +1,7 @@
 package edu.gozke.jtracer;
 
 public class RenderOptions {
-	private Boolean parallelRendedingEnabled;
+	private Boolean parallelRendedingStatus;
 	
 	/**
 	 * Sets the parallel rendering option's value.  
@@ -9,8 +9,13 @@ public class RenderOptions {
 	 * @param enabled {@code True} or {@code False}. {@code Null} means undetermined.
 	 * @return this render object after setting the flag
 	 */
-	public RenderOptions setIsParalellRenderingEnabled(Boolean enabled){
-		parallelRendedingEnabled = enabled;
+	public RenderOptions setParalellRenderingEnabled(Boolean enabled){
+		parallelRendedingStatus = enabled;
 		return this;
 	}
+
+	public Boolean getParallelRendedingEnabled() {
+		return parallelRendedingStatus;
+	}
+	
 }

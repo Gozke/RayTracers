@@ -21,6 +21,10 @@ public class Camera {
 		this.xMax = xResolution;
 		this.yMax = yResolution;
 	}
+	
+	public Camera(int canvasWidth, int canvasHeight){
+		this(new Vector(0,1,-2), new Vector(0, 1, -1), new Vector(0, 1, 0), canvasWidth, canvasHeight);
+	}
 	 
 	/**
 	 * Returns a {@link Ray} that is shot from the eye position of the camera through the camera plane at x,y.
@@ -33,17 +37,25 @@ public class Camera {
 		return new Ray(
 				eye,
 				lookAt.plus(right.scaleBy(2*(x + 0.5f) / xMax-1))
-					  .plus(up.scaleBy(2*(y + 0.5f) / yMax-1))
-				);
+					  .plus(up.scaleBy(2*(y + 0.5f) / yMax-1)),
+				y*xMax + x);
 	} 
 	
 	public Collection<Ray> getAllRays()	{
 		ArrayList<Ray> rays = new ArrayList<>(xMax * yMax);
-		for(int x = 0; x<=xMax; x++){
-			for(int y = 0; y<=yMax; y++){
+		for(int x = 0; x<xMax; x++){
+			for(int y = 0; y<yMax; y++){
 				rays.add(getRay(x, y));
 			}
 		}
 		return rays; 
+	}
+	
+	public int getCanvasWidth(){
+		return xMax;
+	}
+	
+	public int getCanvasHeight(){
+		return yMax;
 	}
 }

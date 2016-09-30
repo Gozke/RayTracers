@@ -9,6 +9,7 @@ package edu.gozke.jtracer.core;
 public class Ray {
 	public final Vector origin;
 	public final Vector direction;
+	public final int pixelId;
 	
 	/**
 	 * Creates a new ray with the specified origin and direction. The direction is normalized.
@@ -18,9 +19,13 @@ public class Ray {
 	 * @param direction direction vector of the ray
 	 */
 	public Ray(Vector origin, Vector direction) {
-		super();
+		this(origin, direction, -1);
+	}
+	
+	public Ray(Vector origin, Vector direction, int pixelId){
 		this.origin = origin.clone();
-		this.direction = direction.clone();
+		this.direction = direction.clone().normalize();
+		this.pixelId = pixelId;
 	}
 	 
 	/**

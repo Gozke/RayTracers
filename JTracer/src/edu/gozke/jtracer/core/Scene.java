@@ -3,33 +3,55 @@ package edu.gozke.jtracer.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.gozke.jtracer.RenderOptions;
 import edu.gozke.jtracer.RenderableScene;
 import edu.gozke.jtracer.objects.RenderableObject;
 
-public class Scene implements Function<Ray, Color>, RenderableScene{
+public class Scene implements RenderableScene{
 	private List<RenderableObject> objectsInScene;
 	private List<LightSource> lightsInScene;
 	private Camera camera;
-	
-	private int width;
-	private int height;
-	
-	private Color Lambient = new Color(152,244,250);
+	private Color Lambient = new Color(0.596f,0.957f,0.95f);
 	
 	/**
 	 * This constructor will construct a scene with the given resolution. (800x600 could be a safe start)
 	 * 
-	 * @param width Width in pixels. 
-	 * @param height Height in pixels.
+	 * @param camera the camera to use for rendering
 	 */
-	public Scene(int width, int height){
+	public Scene(Camera camera){
 		objectsInScene = new ArrayList<>();
 		lightsInScene = new ArrayList<>();
-		camera = null;
+		this.camera = camera;
 	}
 	
+	/**
+	 * Adds the given light source to the scene. The object is taken by reference so changes 
+	 * made to this object will take effect immediately in the scene as well.
+	 * 
+	 * @param lightsource the light source to be added. If {@code null} nothing happens.
+	 */
+	public void addLight(LightSource lightsource){
+		lightsInScene.add(lightsource);
+	}
+	
+	public void addObject(RenderableObject obj){
+		objectsInScene.add(obj);
+	}
+	
+	/**
+	 * Sets the new camera. This object is set by reference and not cloned. This way changes 
+	 * made to this object will take effect immediately in the scene as well.
+	 * <br> This can be useful if you want to move the camera around for example.
+	 * 
+	 * 
+	 * @param c the new camera. May not be {@code null}!
+	 */
+	public void setCamera(Camera c){
+		this.camera = c;
+	}
 	
 	public Color trace(Ray ray){
 		Intersection hit = findNearestInteresction(ray);
@@ -40,8 +62,23 @@ public class Scene implements Function<Ray, Color>, RenderableScene{
 		// return ambient color..
 		return Lambient;
 	}
-	
-	
+
+	@Override
+	public byte[] renderedScene(RenderOptions options) {
+		int width = camera.getCanvasHeight();
+		int height = camera.getCanvasWidth();
+		byte[] buffer = new byte[width*height*3];
+		Stream<Ray> rayStream = options.getParallelRendedingEnabled() ? camera.getAllRays().parallelStream() : camera.getAllRays().stream();
+		rayStream.forEach(ray -> {
+			Color pixelColor = trace(ray);
+			buffer[ray.pixelId*3] = (byte) (pixelColor.blue * 255);
+			buffer[ray.pixelId*3+1] = (byte) (pixelColor.green * 255);
+			buffer[ray.pixelId*3+1] = (byte) (pixelColor.red * 255);
+		});
+		
+		return buffer;
+	}
+
 	/**
 	 * Checks every object find the nearest intersection with the ray.
 	 * 
@@ -62,24 +99,4 @@ public class Scene implements Function<Ray, Color>, RenderableScene{
 		return Intersection.NO_INTERSECTION;		
 	}
 
-	@Override
-	public Color apply(Ray t) {
-		return trace(t);
-	}
-
-	@Override
-	public byte[] renderedScene(int width, int height, RenderOptions options) {
-		byte[] buffer = new byte[width*height*3];
-		for(int r = 0; r<height; r++){
-			for(int c = 0; c<width; c++){
-				int pixelBaseIndex = r*width + c;
-				Color color = trace(camera.getRay(r, c));
-				buffer[pixelBaseIndex] = (byte) (color.blue*255);
-				buffer[pixelBaseIndex+1] = (byte) (color.green*255);
-				buffer[pixelBaseIndex+2] = (byte) (color.red*255);
-			}
-		}
-		return buffer;
-	}
-	
 }

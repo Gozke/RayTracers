@@ -36,8 +36,8 @@ public class TracerFrame extends JFrame {
 	private JButton btnRenderScene;
 	JCheckBox chckbxParalellProcessing;
 	transient JPanel ImagePanel;
-	transient private RenderableScene rendererBackend;
-
+	transient private RenderableScene rendererBackend; 
+ 
 	private enum ImagePaneState {
 		WELCOME, RENDERING, RENDER_COMPLETE, ERROR
 	}
@@ -211,7 +211,7 @@ public class TracerFrame extends JFrame {
 	}
 	
 	private RenderOptions createOptionsFromGUI(){
-		return new RenderOptions().setIsParalellRenderingEnabled(chckbxParalellProcessing.isSelected());
+		return new RenderOptions().setParalellRenderingEnabled(chckbxParalellProcessing.isSelected());
 	}
 
 	private class RenderingWorker extends SwingWorker<byte[], Object>{
@@ -231,7 +231,7 @@ public class TracerFrame extends JFrame {
 		protected byte[] doInBackground() throws Exception {
 			System.out.println("I'm doing stuff..");			
 			
-			return rendererBackend.renderedScene(resX, resY, opts);
+			return rendererBackend.renderedScene(opts);
 		}
 
 

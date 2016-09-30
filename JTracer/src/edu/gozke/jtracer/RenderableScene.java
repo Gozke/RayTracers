@@ -11,5 +11,5 @@ public interface RenderableScene {
 	 * 
 	 * @return the color rendered image in a flat BGR byte array. Size is width*height*3.
 	 */
-	public byte[] renderedScene(int width, int height, RenderOptions options);
+	public byte[] renderedScene(RenderOptions options);
 }
