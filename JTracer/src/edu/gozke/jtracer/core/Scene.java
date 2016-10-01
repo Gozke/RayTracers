@@ -65,8 +65,8 @@ public class Scene implements RenderableScene{
 
 	@Override
 	public byte[] renderedScene(RenderOptions options) {
-		int width = camera.getCanvasHeight();
-		int height = camera.getCanvasWidth();
+		int width = camera.getRenderingHeight();
+		int height = camera.getRenderingWidth();
 		byte[] buffer = new byte[width*height*3];
 		Stream<Ray> rayStream = options.getParallelRendedingEnabled() ? camera.getAllRays().parallelStream() : camera.getAllRays().stream();
 		rayStream.forEach(ray -> {
@@ -79,6 +79,11 @@ public class Scene implements RenderableScene{
 		return buffer;
 	}
 
+	public void setRenderingResolution(int width, int height){
+		camera.setRenderingHeight(width);
+		camera.setRenderingHeight(height);
+	}
+	
 	/**
 	 * Checks every object find the nearest intersection with the ray.
 	 * 

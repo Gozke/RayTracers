@@ -97,28 +97,17 @@ public class Vector {
 	}
 	
 	/**
-	 * this - B
-	 * 
-	 * @param B
-	 * @return this - B
-	 */
-	public Vector minus(Vector B){
-		return subtract(this, B);
-	}
-	
-	/**
-	 * Returns the a - b new vector.
+	 * Returns the this - B new vector.
 	 * For performance reasons this does not delegate calls to {@link #add(Vector, Vector)}.
 	 * 
-	 * @param a vector to subtract from
-	 * @param b vector to be subtracted
-	 * @return a - b in a new vector
+	 * @param B vector to be subtracted
+	 * @return this - b in a new vector
 	 */
-	public static Vector subtract(Vector a, Vector b){
+	public Vector minus(Vector B){
 		return new Vector(
-				 a.x - b.x
-				,a.y - b.y
-				,a.z - b.z
+				 this.x - B.x
+				,this.y - B.y
+				,this.z - B.z
 				);
 	}
 	
