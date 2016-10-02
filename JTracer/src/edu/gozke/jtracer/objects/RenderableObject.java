@@ -5,19 +5,25 @@ import edu.gozke.jtracer.core.Ray;
 import edu.gozke.jtracer.core.TransformationMatrix;
 import edu.gozke.jtracer.core.TransformationMatrix.TransformationTarget;
 import edu.gozke.jtracer.core.Vector;
+import edu.gozke.jtracer.materials.RoughSurface;
 
 public abstract class RenderableObject {
 	TransformationMatrix transformationManager;
+	RoughSurface material;
 	
-
 	public RenderableObject() {
 		transformationManager = new TransformationMatrix();
 	}
 
-	public RenderableObject(TransformationMatrix transformations) {
+	public RenderableObject(TransformationMatrix transformations, RoughSurface material) {
 		transformationManager = transformations;
+		this.material = material;
 	}
 
+	public RoughSurface getMaterial(){
+		return material;
+	}
+	
 	/**
 	 * Transforms the ray into object's space and determines if the given ray intersects
 	 * with this object and returns intersection point, and surface normal in that point.
@@ -37,9 +43,8 @@ public abstract class RenderableObject {
 		}
 		
 		Vector hitPoint = rayInObjectBase.getPointOfRay(t);
-		//Vector surfaceNormalInObjectBase = calculateSurfaceNormalAt(hitPoint);
-		//Vector normalInWorldBase = transformationManager.transform(surfaceNormalInObjectBase, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE).normalize();
-		Vector normalInWorldBase = null;
+		Vector surfaceNormalInObjectBase = calculateSurfaceNormalAt(hitPoint);
+		Vector normalInWorldBase = transformationManager.transform(surfaceNormalInObjectBase, TransformationTarget.VECTOR_FROM_OBJECT_TO_WORLD_BASE).normalize();
 		Vector hitPointInWorldBase = transformationManager.transform(hitPoint, TransformationTarget.POINT_FROM_OBJECT_TO_WORLD_BASE);
 		
 		float tInWorldSpace = hitPointInWorldBase.minus(rayInWorldBase.origin).lenght() / rayInWorldBase.direction.lenght();

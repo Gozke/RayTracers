@@ -93,7 +93,7 @@ public class Camera {
 	 * @return
 	 */ 
 	public Ray getRay(int x, int y) {
-		Vector pointOnViewRect = viewingPlaneCenter.plus(right.scaleBy( 2*(x/(xMax-1)-0.5f) ).plus(up.scaleBy( 2*(0.5f-y/(yMax-1) ))));
+		Vector pointOnViewRect = viewingPlaneCenter.plus(right.scaleBy( 2*((float)x/(xMax)-0.5f) ).plus(up.scaleBy( 2*(0.5f-(float)y/(yMax) ))));
 		return new Ray(
 				pointOnViewRect,
 				pointOnViewRect.minus(eye).normalize(),

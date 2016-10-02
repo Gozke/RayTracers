@@ -3,6 +3,7 @@ package edu.gozke.jtracer.objects;
 import edu.gozke.jtracer.core.Ray;
 import edu.gozke.jtracer.core.TransformationMatrix;
 import edu.gozke.jtracer.core.Vector;
+import edu.gozke.jtracer.materials.RoughSurface;
 
 public class Sphere extends RenderableObject{
 	protected float radius;
@@ -14,8 +15,8 @@ public class Sphere extends RenderableObject{
 		this.radius = radius;
 	}
 	
-	public Sphere(float radius, TransformationMatrix transformations) {
-		super(transformations);
+	public Sphere(float radius, TransformationMatrix transformations, RoughSurface material) {
+		super(transformations, material);
 		this.radius = radius;
 	}
 
@@ -41,13 +42,13 @@ public class Sphere extends RenderableObject{
 			return null;
 		}
 		if(arr.length == 1){
-			return arr[0] >= 0 ? arr[0] : null;
+			return arr[0] >= Vector.EPSILON ? arr[0] : null;
 		}
 		if(arr[0] > 0){
 			return arr[0];
 		}
 		
-		return arr[1] >= 0 ? arr[1] : null;
+		return arr[1] >= Vector.EPSILON ? arr[1] : null;
 	}
 	
 	protected Float[] solveQuadratic(float A, float B, float C){
@@ -73,8 +74,7 @@ public class Sphere extends RenderableObject{
 	}
 	@Override
 	public Vector calculateSurfaceNormalAt(Vector point) {
-		// TODO Auto-generated method stub
-		return null;
+		return point;
 	}
 
 }

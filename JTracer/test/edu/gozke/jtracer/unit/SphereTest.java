@@ -1,8 +1,8 @@
 package edu.gozke.jtracer.unit;
 
+import edu.gozke.jtracer.core.Intersection;
 import edu.gozke.jtracer.core.Ray;
 import edu.gozke.jtracer.core.TransformationMatrix;
-import edu.gozke.jtracer.core.TransformationMatrix.Axis;
 import edu.gozke.jtracer.core.Vector;
 import edu.gozke.jtracer.objects.Sphere;
 import junit.framework.TestCase;
@@ -40,8 +40,11 @@ public class SphereTest extends TestCase {
 	public void testIntersect(){
 		Ray r = new Ray(new Vector(5,2,0), new Vector(-1,0,0));
 		TransformationMatrix trafo = new TransformationMatrix().applyScaling(2, 2, 2);
-		Sphere testSphere = new Sphere(1, trafo);
-		assertEquals(5, testSphere.intersectWith(r).tParameter, 0.0001);
+		Sphere testSphere = new Sphere(1, trafo, null);
+		Intersection hit = testSphere.intersectWith(r);
+		assertEquals(5, hit.tParameter, 0.0001);
+		assertEquals(new Vector(0,1,0), hit.normalVector);
+		System.out.println(hit.intersectionPoint);
 	
 	}
 }

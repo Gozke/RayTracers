@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Vector {
 	public final float x,y,z, w;
 	
-	private static final float DELTA = 0.00003f;
+	public static final float EPSILON = 0.0001f;
 
 	public Vector(float x, float y, float z) {
 		super();
@@ -148,7 +148,7 @@ public class Vector {
 	}
 	
 	private boolean equalsDelta(float a, float b){
-		return Math.abs(a - b) < DELTA;
+		return Math.abs(a - b) < EPSILON;
 	}
 	/**
 	 * Multiples this vector by the parameter matrix. The result will be saved in this vector.

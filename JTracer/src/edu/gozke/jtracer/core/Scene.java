@@ -2,19 +2,19 @@ package edu.gozke.jtracer.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.gozke.jtracer.RenderOptions;
 import edu.gozke.jtracer.RenderableScene;
+import edu.gozke.jtracer.lights.LightSource;
+import edu.gozke.jtracer.materials.RoughSurface;
 import edu.gozke.jtracer.objects.RenderableObject;
 
 public class Scene implements RenderableScene{
 	private List<RenderableObject> objectsInScene;
 	private List<LightSource> lightsInScene;
 	private Camera camera;
-	private Color Lambient = new Color(0.596f,0.957f,0.95f);
+	private Color Lambient = new Color(10,10,10, true); // gray-ish
 	
 	/**
 	 * This constructor will construct a scene with the given resolution. (800x600 could be a safe start)
@@ -55,12 +55,23 @@ public class Scene implements RenderableScene{
 	
 	public Color trace(Ray ray){
 		Intersection hit = findNearestInteresction(ray);
+		Color color = Lambient;
 		if(hit != Intersection.NO_INTERSECTION){
-			// do stuff with intersection point..
+			//color = new Color(10,10,10,true);
+			for(LightSource light: lightsInScene){
+				Ray shadowRay = new Ray(hit.intersectionPoint, light.getPosition().minus(hit.intersectionPoint));
+				if(findNearestInteresction(shadowRay) == Intersection.NO_INTERSECTION){
+					RoughSurface mat = hit.intersectedObject.getMaterial();
+					Vector toLight = light.getPosition().minus(hit.intersectionPoint).normalize();
+					Vector toCamera = ray.direction.scaleBy(-1);
+					Color newC = mat.calulcateReflectedRadiance(toLight, toCamera, hit.normalVector, light.getColor());
+					color = color.plus(newC);
+				}
+			}
 		}
 		
 		// return ambient color..
-		return Lambient;
+		return color;
 	}
 
 	@Override
@@ -71,16 +82,16 @@ public class Scene implements RenderableScene{
 		Stream<Ray> rayStream = options.getParallelRendedingEnabled() ? camera.getAllRays().parallelStream() : camera.getAllRays().stream();
 		rayStream.forEach(ray -> {
 			Color pixelColor = trace(ray);
-			buffer[ray.pixelId*3] = (byte) (pixelColor.blue * 255);
+			buffer[ray.pixelId*3] = (byte) (pixelColor.red * 255);
 			buffer[ray.pixelId*3+1] = (byte) (pixelColor.green * 255);
-			buffer[ray.pixelId*3+1] = (byte) (pixelColor.red * 255);
+			buffer[ray.pixelId*3+2] = (byte) (pixelColor.blue * 255);
 		});
 		
 		return buffer;
 	}
 
 	public void setRenderingResolution(int width, int height){
-		camera.setRenderingHeight(width);
+		camera.setRenderingWidth(width);
 		camera.setRenderingHeight(height);
 	}
 	
@@ -91,17 +102,15 @@ public class Scene implements RenderableScene{
 	 *  {@link Intersection#NO_INTERSECTION} if no intersecting object was found.
 	 */
 	private Intersection findNearestInteresction(Ray ray){
-		RenderableObject nearestObject = null;
 		Intersection nearestIntersection = Intersection.NO_INTERSECTION;
 		for(RenderableObject obj : objectsInScene){
 			Intersection hit = obj.intersectWith(ray);
 			if(hit != Intersection.NO_INTERSECTION && hit.tParameter < nearestIntersection.tParameter){
 				nearestIntersection = hit;
-				nearestObject = obj;
 			}
 		}
 		
-		return Intersection.NO_INTERSECTION;		
+		return nearestIntersection;		
 	}
 
 }

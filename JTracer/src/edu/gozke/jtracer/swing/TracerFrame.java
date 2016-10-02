@@ -28,6 +28,7 @@ import javax.swing.border.LineBorder;
 import edu.gozke.jtracer.RenderOptions;
 import edu.gozke.jtracer.RenderableScene;
 import edu.gozke.jtracer.core.Color;
+import edu.gozke.jtracer.core.Scene;
 
 
 public class TracerFrame extends JFrame {
@@ -36,13 +37,15 @@ public class TracerFrame extends JFrame {
 	private JButton btnRenderScene;
 	JCheckBox chckbxParalellProcessing;
 	transient JPanel ImagePanel;
-	transient private RenderableScene rendererBackend; 
+	transient private Scene rendererBackend; 
+	int X;
+	int Y;
  
 	private enum ImagePaneState {
 		WELCOME, RENDERING, RENDER_COMPLETE, ERROR
 	}
 
-	public TracerFrame(RenderableScene rendererBackend) throws HeadlessException {
+	public TracerFrame(Scene rendererBackend) throws HeadlessException {
 		super();
 		this.rendererBackend = rendererBackend;
 		initGUI();
@@ -61,7 +64,7 @@ public class TracerFrame extends JFrame {
 			ImagePanel.add(progressBar);
 		} else if(state == ImagePaneState.RENDER_COMPLETE){
 			ImgDisplayer img = new ImgDisplayer(createBufferedImage(imgData));
-			img.setPreferredSize(new Dimension(800,600));
+			img.setPreferredSize(new Dimension(X,Y));
 			ImagePanel.add(img);
 		} else if(state == ImagePaneState.ERROR){
 			JLabel lbl = new JLabel("Exception occured while rendering. See stderr!");
@@ -87,7 +90,6 @@ public class TracerFrame extends JFrame {
 
 		ImagePanel = new JPanel();
 		ImagePanel.setMinimumSize(new Dimension(10, 500));
-		//ImagePanel.setPreferredSize(new Dimension(1024, 600));
 		ImagePanel.setBorder(new LineBorder(new java.awt.Color(0, 0, 0), 3));
 		getContentPane().add(ImagePanel, BorderLayout.CENTER);
 		ImagePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -120,7 +122,7 @@ public class TracerFrame extends JFrame {
 		ControlsPanel.add(lblWidth, gbc_lblWidth);
 
 		txtWidth = new JTextField();
-		txtWidth.setText("800");
+		txtWidth.setText("600");
 		GridBagConstraints gbc_txtWidth = new GridBagConstraints();
 		gbc_txtWidth.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtWidth.insets = new Insets(0, 0, 5, 5);
@@ -194,18 +196,18 @@ public class TracerFrame extends JFrame {
 	 * when it's done. Displays a progress bar while the operation is completed.
 	 */
 	private void initiateRendering() {
-		int width = Integer.parseInt(txtWidth.getText());
-		int height = Integer.parseInt(txtHeight.getText());
+		X = Integer.parseInt(txtWidth.getText());
+		Y = Integer.parseInt(txtHeight.getText());
 		setEnableControls(false);
 		setImagePanelContent(ImagePaneState.RENDERING, null);
 		
-		new RenderingWorker(width, height, createOptionsFromGUI()).execute();
+		new RenderingWorker(X, Y, createOptionsFromGUI()).execute();
 	}
 	
 	private BufferedImage createBufferedImage(byte[] imgData){
-		BufferedImage bImage = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage bImage = new BufferedImage(X, Y, BufferedImage.TYPE_3BYTE_BGR);
 		WritableRaster rast = bImage.getRaster();
-		rast.setDataElements(0, 0, 800, 600, imgData);
+		rast.setDataElements(0, 0, X, Y, imgData);
 
 		return bImage;
 	}
@@ -221,6 +223,7 @@ public class TracerFrame extends JFrame {
 		
 		public RenderingWorker(int resX, int resY, RenderOptions opts) {
 			super();
+			rendererBackend.setRenderingResolution(resX, resY);
 			this.resX = resX;
 			this.resY = resY;
 			this.opts = opts;
@@ -229,8 +232,6 @@ public class TracerFrame extends JFrame {
 
 		@Override
 		protected byte[] doInBackground() throws Exception {
-			System.out.println("I'm doing stuff..");			
-			
 			return rendererBackend.renderedScene(opts);
 		}
 
