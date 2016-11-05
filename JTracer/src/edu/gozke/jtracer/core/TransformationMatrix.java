@@ -3,12 +3,6 @@ package edu.gozke.jtracer.core;
 public class TransformationMatrix {
 	private QuadMatrix tMatrix;
 	
-	public enum Axis{
-		X,
-		Y,
-		Z
-	}
-	
 	public enum TransformationTarget{
 		/**
 		 * Vt = v * [M]
