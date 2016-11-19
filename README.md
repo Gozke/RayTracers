@@ -1,2 +1,2 @@
 # RayTracers
-This repository stores the RayTracers I thinker with,
+This repository stores the RayTracers I tinker with..
