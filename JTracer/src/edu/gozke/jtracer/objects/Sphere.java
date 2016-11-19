@@ -11,8 +11,9 @@ public class Sphere extends RenderableObject{
 	/**
 	 * @param radius
 	 */
-	public Sphere(float radius) {
+	public Sphere(float radius, RoughSurface material) {
 		this.radius = radius;
+		this.material = material;
 	}
 	
 	public Sphere(float radius, TransformationMatrix transformations, RoughSurface material) {

@@ -11,7 +11,7 @@ public class SphereTest extends TestCase {
 	public class ExposerClass extends Sphere{
 
 		public ExposerClass(float radius) {
-			super(radius);
+			super(radius, null);
 		}
 		
 		@Override

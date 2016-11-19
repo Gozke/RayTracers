@@ -1,5 +1,6 @@
 package edu.gozke.jtracer.objects;
 
+import edu.gozke.jtracer.core.Axis;
 import edu.gozke.jtracer.core.Intersection;
 import edu.gozke.jtracer.core.Ray;
 import edu.gozke.jtracer.core.TransformationMatrix;
@@ -53,6 +54,49 @@ public abstract class RenderableObject {
 	}
 
 	/**
+	 * Translates the object along the x/y/z axis by the specified amount.
+	 * <br>Remember, the translation happens in the object's own base.
+	 * This means that you have to take into account the previous rotation(s) / scaling(s) applied to 
+	 * the object's base.
+	 * 
+	 * @param x the number of unit the object should be translated along the x axis
+	 * @param y the number of unit the object should be translated along the y axis
+	 * @param z the number of unit the object should be translated along the z axis
+	 * 
+	 * @return this object after the translation
+	 * 
+	 */
+	public RenderableObject translate(float x, float y, float z){
+		transformationManager.applyTranslation(x, y, z);
+		return this;
+	}
+	
+	/**
+	 * Rotates the object around the given axis by the specified angle counter-clockwise.
+	 * 
+	 * @param axis the axis to rotate around
+	 * @param degrees the angle in degrees. A positive angle means counter-clockwise rotation.
+	 * @return this object after the tranformation
+	 */
+	public RenderableObject rotate(Axis axis, float degrees){
+		transformationManager.applyRotation(axis, (float)Math.toRadians(degrees));
+		return this;
+	}
+	
+	/**
+	 * Scales the object by the given scaling factors.
+	 * 
+	 * @param x scale object by this much along x axis
+	 * @param y scale object by this much along y axis
+	 * @param z scale object by this much along z axis
+	 * @return
+	 */
+	public RenderableObject scale(float x, float y, float z){
+		transformationManager.applyScaling(x, y, z);
+		return this;
+	}
+	
+	/**
 	 * Performs the intersection check in the object's base. The ray provided as
 	 * parameter is already transformed to object's base. The results must be in
 	 * the object's base as well. <br>
@@ -76,4 +120,5 @@ public abstract class RenderableObject {
 	 * @return the normal the surface normal in world's base.
 	 */
 	public abstract Vector calculateSurfaceNormalAt(Vector point);
+	
 }

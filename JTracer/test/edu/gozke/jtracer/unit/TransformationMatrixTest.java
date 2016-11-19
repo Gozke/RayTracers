@@ -1,8 +1,8 @@
 package edu.gozke.jtracer.unit;
 
+import edu.gozke.jtracer.core.Axis;
 import edu.gozke.jtracer.core.QuadMatrix;
 import edu.gozke.jtracer.core.TransformationMatrix;
-import edu.gozke.jtracer.core.TransformationMatrix.Axis;
 import edu.gozke.jtracer.core.TransformationMatrix.TransformationTarget;
 import edu.gozke.jtracer.core.Vector;
 import junit.framework.TestCase;

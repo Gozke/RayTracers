@@ -15,6 +15,7 @@ public class Scene implements RenderableScene{
 	private List<LightSource> lightsInScene;
 	private Camera camera;
 	private Color Lambient = new Color(10,10,10, true); // gray-ish
+	private Color backgroundColor;
 	
 	/**
 	 * This constructor will construct a scene with the given resolution. (800x600 could be a safe start)
@@ -42,6 +43,25 @@ public class Scene implements RenderableScene{
 	}
 	
 	/**
+	 * Sets the color and intensity of the ambient light. 
+	 * @param illColor new ambient light color/intensity
+	 */
+	public void setAmbientIllumination(Color illColor){
+		Lambient = illColor;
+	}
+	
+	/**
+	 * Set the background color. This color is used when no objects intersected with the ray.
+	 * Set this to {@code null} to disable this feature. (If disabled, the ambient color will be used in this case)
+	 * 
+	 * @param bgroundColor the color to use when no object intersects with the ray. Set to {@code null}
+	 * to use ambient color in this case.
+	 */
+	public void setBackgroundColor(Color bgroundColor){
+		backgroundColor = bgroundColor;
+	}
+	
+	/**
 	 * Sets the new camera. This object is set by reference and not cloned. This way changes 
 	 * made to this object will take effect immediately in the scene as well.
 	 * <br> This can be useful if you want to move the camera around for example.
@@ -53,24 +73,25 @@ public class Scene implements RenderableScene{
 		this.camera = c;
 	}
 	
-	public Color trace(Ray ray){
+	protected Color trace(Ray ray){
 		Intersection hit = findNearestInteresction(ray);
 		Color color = Lambient;
 		if(hit != Intersection.NO_INTERSECTION){
-			//color = new Color(10,10,10,true);
 			for(LightSource light: lightsInScene){
 				Ray shadowRay = new Ray(hit.intersectionPoint, light.getPosition().minus(hit.intersectionPoint));
 				if(findNearestInteresction(shadowRay) == Intersection.NO_INTERSECTION){
 					RoughSurface mat = hit.intersectedObject.getMaterial();
 					Vector toLight = light.getPosition().minus(hit.intersectionPoint).normalize();
 					Vector toCamera = ray.direction.scaleBy(-1);
-					Color newC = mat.calulcateReflectedRadiance(toLight, toCamera, hit.normalVector, light.getColor());
+					float lightIntensityFactor = (float) (3f/light.getPosition().minus(hit.intersectionPoint).lenght());
+					Color newC = mat.calulcateReflectedRadiance(toLight, toCamera, hit.normalVector, light.getColor().multiply(lightIntensityFactor));
 					color = color.plus(newC);
 				}
 			}
+		} else {
+			return backgroundColor != null ? backgroundColor : color; 
 		}
 		
-		// return ambient color..
 		return color;
 	}
 

@@ -47,8 +47,11 @@ public class RoughSurface {
         if (cosTetha < 0) return new Color(0, 0, 0);
         Color lightReflected = incomingIllumination.multiply(kd).multiply(cosTetha);
         Vector H = lightsDirection.plus(camerasDirection).normalize();
-        //float cosDelta = surfaceNormal.dotProduct(H);
+        float cosDelta = surfaceNormal.dotProduct(H);
+        if(cosDelta < 0){
+        	return lightReflected;
+        }
         
-		return lightReflected;
+		return lightReflected.plus(lightReflected.multiply(ks).multiply((float)Math.pow(cosDelta, shininess)));
 	}
 }
